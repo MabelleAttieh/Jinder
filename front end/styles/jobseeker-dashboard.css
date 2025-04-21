@@ -1,0 +1,148 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Nav */
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 20px 60px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 60px;
+}
+
+.header {
+    font-family: "Poppins", sans-serif;
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.clicked,
+.header:hover {
+    border-bottom: 2px solid white;
+}
+
+.logout-button {
+    border-radius: 10px;
+    border: 2px solid whitesmoke;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: whitesmoke;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout-button:hover {
+    color: #8e63dc;
+    background-color: whitesmoke;
+}
+
+/* Dashboard */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Swipe Card */
+.swipe-card {
+    background-color: white;
+    width: 350px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 30px;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+}
+
+.company-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+.company-details h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.job-brief {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.salary {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.swipe-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.swipe-actions button {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 15px;
+    transition: transform 0.3s;
+}
+
+.swipe-actions button:hover {
+    transform: scale(1.2);
+}
+
+/* Icons Section (Placed below the swipe card) */
+.icons-section {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.icon {
+    text-align: center;
+}
+
+.icon i {
+    color: #B197FC;
+    font-size: 36px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.icon i:hover {
+    transform: scale(1.1);
+}

@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Nav */
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 20px 60px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 60px;
+}
+
+.Dash-button {
+    border-radius: 10px;
+    border: 2px solid whitesmoke;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: whitesmoke;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.Dash-button:hover {
+    color: #8e63dc;
+    background-color: whitesmoke;
+}
+
+
+/* Job Post Card */
+.job-post-card {
+    width: 60%;
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.job-post-card h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #004aad;
+}
+
+.job-post-card input,
+.job-post-card textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.job-post-card input::placeholder,
+.job-post-card textarea::placeholder {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.job-post-card button {
+    padding: 15px 30px;
+    background-color: #004aad; /* Header color match */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.job-post-card button:hover {
+    background-color: #8e63dc;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}

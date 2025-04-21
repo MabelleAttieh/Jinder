@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a New Job</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/job-post.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <nav>
+      <div class="navdiv">
+          <div class="logo"> 
+              <a href="company-dashboard.html"><img src="images/logoblue.png" alt="Logo"></a>
+          </div>
+          <ul>
+            <li><a href="company-dashboard.html" class="Dash-button">Dashboard</a></li>
+          </ul>
+      </div>
+  </nav>
+
+  <!-- Job Post Card -->
+  <div class="job-post-card">
+    <h2>Post a New Job</h2>
+    <form action="#">
+      <input type="text" placeholder="Job Title" required>
+      <textarea placeholder="Job Description" required></textarea>
+      <input type="number" placeholder="Salary" required>
+      <input type="text" placeholder="Company Name" required>
+      <button type="submit">Post Job</button>
+    </form>
+  </div>
+  <script src="js/job-post.js"></script>
+
+</body>
+</html>

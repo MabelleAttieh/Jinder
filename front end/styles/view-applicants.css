@@ -1,0 +1,151 @@
+/* Reset & Body */
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f4f9;
+}
+
+/* Navigation Header */
+.navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 20px 60px;
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 60px;
+    margin: 0;
+    padding: 0;
+}
+
+.Dash-button {
+    border-radius: 10px;
+    border: 2px solid whitesmoke;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: whitesmoke;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.Dash-button:hover {
+    color: #8e63dc;
+    background-color: whitesmoke;
+}
+/* Main Container */
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f4f9;
+}
+
+/* Header */
+.navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 20px 60px;
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 60px;
+    margin: 0;
+    padding: 0;
+}
+
+.header-button {
+    border-radius: 10px;
+    border: 2px solid whitesmoke;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 20px;
+    background-color: transparent;
+    transition: 0.3s ease;
+}
+
+.header-button:hover {
+    background-color: whitesmoke;
+    color: #8e63dc;
+}
+
+/* Applicants Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+    gap: 30px;
+}
+
+/* Card */
+.applicant-card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.applicant-card h3 {
+    margin: 10px 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.applicant-card p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.view-button {
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.view-button:hover {
+    background: linear-gradient(90deg, #003399, #b566e2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+

@@ -1,0 +1,143 @@
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  /* Nav */
+  .logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+  }
+  
+  .navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 20px 60px;
+  }
+  
+  ul {
+    display: flex;
+    list-style: none;
+    gap: 60px;
+  }
+  
+  .header {
+    font-family: "Poppins", sans-serif;
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .clicked,
+  .header:hover {
+    border-bottom: 2px solid white;
+  }
+  .logout-button {
+    border-radius: 10px;
+    border: 2px solid whitesmoke;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: whitesmoke;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout-button:hover {
+    color: #8e63dc;
+    background-color: whitesmoke;
+}
+
+
+/* Dashboard Container */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 40px;
+}
+
+/* Welcome Title */
+h1 {
+    font-size: 32px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Card Grid */
+.card-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 250px; /* Ensures cards don't get too small */
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card i {
+    font-size: 40px;
+    color: #8e63dc; /* Icon color */
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.card a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #8e63dc;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.card a:hover {
+    background-color: #cb6ce6;
+}
+
+/* Horizontal Line */
+.hr-line {
+    border: 0;
+    border-top: 2px solid #cb6ce6;
+    margin-top: 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-grid {
+        flex-direction: column; /* Stack cards vertically on small screens */
+        align-items: center;
+    }
+}

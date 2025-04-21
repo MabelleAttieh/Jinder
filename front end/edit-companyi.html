@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Company Info</title>
+    <link rel="stylesheet" href="styles/edit-companyi.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <nav>
+        <div class="navdiv">
+            <div class="logo"> 
+                <a href="company-dashboard.html"><img src="images/logoblue.png" alt="Logo"></a>
+            </div>
+            <ul>
+              <li><a href="company-dashboard.html" class="header-button">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+      <div class="card">
+        <h2>Edit Company Information</h2>
+        <form>
+          <input type="text" id = "company name" placeholder="Company Name" required />
+          <input type="email" id="companyEmail" placeholder="Email Address" required />
+          
+          <!-- Password Field -->
+          <input type="password" id="companyPassword" placeholder="Password" required />
+          
+          <!-- Confirm Password Field -->
+          <input type="password" id="companyConfirmPassword" placeholder="Confirm Password" required />
+          
+          <textarea id="companyDescription" placeholder="Brief Description" required></textarea>
+          
+          <!-- Upload Logo Field -->
+          <div>
+            <label for="logo">Upload Company Logo</label>
+            <input type="file" id="logo" name="logo" accept="image/*"  />
+          </div>
+  
+          <button type="submit">Save Changes</button>
+        </form>
+      </div>
+    </div>
+    <script src="js/edit-company.js"></script>
+
+</body>
+</html>
+
+</html>

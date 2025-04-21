@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/footerLogo.png">
+    <link rel="stylesheet" href="styles/jobseeker-signup.css">
+    <title>Jobseeker Sign Up</title>
+</head>
+<body>
+    <nav>
+        <div class="navdiv">
+            <div class="logo"> <a href="index.html"><img src="images/logoblue.png" alt="Logo"></a></div>
+            <ul>
+                <li><a href="index.html" class="header">Home</a></li>
+                <li><a href="jobseeker-signup.html" class="header clicked">Jobseeker</a></li>
+                <li><a href="company-signup.html" class="header">Company</a></li>
+                <li><a href="login.html" class="login-button">Log In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="signup-section">
+            <h1>Jobseeker Sign Up</h1>
+            <form id="jobseeker-signup-form">
+                <div>
+                    <label for="firstname">First Name</label>
+                    <input type="text" id="firstname" name="firstname" placeholder="Bonnie" required>
+                </div>
+
+                <div>
+                    <label for="lastname">Last Name</label>
+                    <input type="text" id="lastname" name="lastname" placeholder="Parker" required>
+                </div>
+                
+                <div>
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" placeholder="18" required>
+                </div>
+
+                <div>
+                    <label for="major">Major/Degree</label>
+                    <input type="text" id="major" name="major" placeholder="Mechatronics engineering" required>
+                </div>
+                 <div>
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+                      </div>
+                          
+                          <!-- Password Field -->
+                          <div>
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required placeholder="Enter your password">
+                          </div>
+                          
+                          <!-- Confirm Password Field -->
+                          <div>
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                          </div>
+                          
+                <div>
+                    <label for="cv">Upload CV</label>
+                    <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                </div>
+
+                <div>
+                    <label for="cover-letter">Upload Cover Letter</label>
+                    <input type="file" id="cover-letter" name="cover-letter" accept=".pdf,.doc,.docx" required>
+                </div>
+
+                <button type="submit">Sign Up</button>
+            </form>
+            
+        </section>
+    </main>
+
+    <script src="js/jobseeker-signup.js"></script>
+
+</body>
+</html>

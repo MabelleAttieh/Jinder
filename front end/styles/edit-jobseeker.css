@@ -1,0 +1,152 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f2ef;
+}
+
+/* Navigation Header */
+.navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 20px 60px;
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 60px;
+    margin: 0;
+    padding: 0;
+}
+
+.header-button {
+    border-radius: 10px;
+    border: 2px solid whitesmoke;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 20px;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header-button:hover {
+    background-color: whitesmoke;
+    color: #8e63dc;
+}
+
+/* Main Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 90vh;
+    padding: 40px 20px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 750px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-sizing: border-box;
+}
+
+/* Edit Profile Title */
+.card h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #fff;
+    text-align: left;
+    font-weight: 600;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    padding: 0 10px; /* Slight padding to make the gradient stand out */
+    border-radius: 10px;
+}
+
+/* Form Styling */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 16px;
+    color: #333;
+    border: 2px solid #cb6ce6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box; /* Ensures input fits within card */
+}
+
+.form-group input:focus {
+    border-color: #004aad;
+}
+
+/* Save Button Styling */
+.save-button {
+    padding: 14px 24px;
+    font-size: 18px;
+    background: linear-gradient(90deg, #004aad, #cb6ce6);
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.save-button:hover {
+    background: linear-gradient(90deg, #8e63dc, #004aad);
+    transform: translateY(-2px);
+}
+
+.save-button:active {
+    transform: translateY(2px);
+}
+
+/* Button Style for File Upload */
+input[type="file"] {
+    border: none;
+    padding: 14px 20px;
+    background-color: #e8e8e8;
+    color: #333;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-sizing: border-box; /* Ensures input fits within card */
+}
+
+input[type="file"]:hover {
+    background-color: #d1d1d1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

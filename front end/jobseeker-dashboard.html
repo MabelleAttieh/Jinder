@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobseeker Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/jobseeker-dashboard.css">
+</head>
+<body>
+    
+    <nav>
+        <div class="navdiv">
+            <div class="logo"> <a href="index.html"><img src="images/logoblue.png" alt="Logo"></a></div>
+            <ul>
+                <li><a href="index.html" class="header">Home</a></li>
+                <li><a href="login.html" class="logout-button">Log Out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        
+        <div class="swipe-card">
+            <div class="company-info">
+                <img src="company-logo.png" alt="Company Logo" class="company-logo">
+                <div class="company-details">
+                    <h3>Company Name</h3>
+                    <p class="job-brief">Brief description of the company and job offer.</p>
+                    <p class="salary">Salary: $50,000/year</p>
+                </div>
+            </div>
+            <div class="swipe-actions">
+                <button class="thumbs-down" onclick="swipeLeft()">
+                    <i class="fa-regular fa-thumbs-down" style="color: #8e63dc;"></i>
+                </button>
+                <button class="thumbs-up" onclick="swipeRight()">
+                    <i class="fa-regular fa-thumbs-up" style="color: #8e63dc;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Icons Section (Below the swipe card) -->
+         <!-- Icons Section (Below the swipe card) -->
+         <div class="icons-section">
+            <div class="icon">
+                <a href="jobseeker-not.html">
+                    <i class="fa-solid fa-bell" style="color: #8e63dc; font-size: 36px;"></i>
+                </a>
+            </div>
+            <div class="icon">
+                <a href="jobseeker-profile.html">
+                    <i class="fa-solid fa-user" style="color: #8e63dc; font-size: 36px;"></i>
+                </a>
+            </div>
+            <div class="icon">
+                <a href="edit-jobseeker.html">
+                    <i class="fa-solid fa-gear" style="color: #8e63dc;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jobseeker-dashboard.js"></script>
+    <script src="js/logout.js"></script>
+</body>
+</html>
