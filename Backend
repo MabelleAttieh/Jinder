@@ -8,3 +8,296 @@ def get_connection():
         database="jinder"
     )
 
+from flask import Flask, request, jsonify
+from flask_mysqldb import MySQL
+from flask_cors import CORS
+from functools import wraps
+import bcrypt
+import re
+import os
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__)
+CORS(app)
+
+# MySQL Configuration
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'MYSQLmabelle05!'
+app.config['MYSQL_DB'] = 'jinder'
+mysql = MySQL(app)
+
+# Upload Configuration
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Sign Up job users -> WORKSSSSSS
+@app.route('/signup', methods=['POST'])
+def signup():
+    try:
+        # Validate files
+        if 'cv' not in request.files or 'cover-letter' not in request.files:
+            return jsonify({'success': False, 'message': 'CV and Cover Letter are required.'}), 400
+
+        cv_file = request.files['cv']
+        cl_file = request.files['cover-letter']
+
+        if cv_file.filename == '' or cl_file.filename == '':
+            return jsonify({'success': False, 'message': 'No selected file.'}), 400
+
+        if not (allowed_file(cv_file.filename) and allowed_file(cl_file.filename)):
+            return jsonify({'success': False, 'message': 'Allowed file types: PDF, DOC, DOCX.'}), 400
+
+        # Secure filenames and save
+        cv_filename = secure_filename(f"cv_{request.form.get('email')}_{cv_file.filename}")
+        cl_filename = secure_filename(f"cl_{request.form.get('email')}_{cl_file.filename}")
+        cv_path = os.path.join(app.config['UPLOAD_FOLDER'], cv_filename)
+        cl_path = os.path.join(app.config['UPLOAD_FOLDER'], cl_filename)
+        cv_file.save(cv_path)
+        cl_file.save(cl_path)
+
+        # Get form data
+        first_name = request.form.get('firstname', '').strip()
+        last_name = request.form.get('lastname', '').strip()
+        gender = request.form.get('gender', '').capitalize()  # Ensure Male/Female
+        age = int(request.form.get('age', 0))
+        major = request.form.get('major', '').strip()
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+
+        # Validate required fields
+        if not all([first_name, last_name, gender, major, email, password]) or age < 18:
+            return jsonify({'success': False, 'message': 'Missing/invalid fields. Age must be ≥18.'}), 400
+
+        # Hash password
+        hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        cur = mysql.connection.cursor()
+
+        # Check email uniqueness
+        cur.execute("SELECT user_id FROM user WHERE user_email = %s", (email,))
+        if cur.fetchone():
+            cur.close()
+            return jsonify({'success': False, 'message': 'Email already exists.'}), 409
+
+        # Insert user
+        cur.execute("""
+            INSERT INTO user (
+                first_name, last_name, gender, major, age, 
+                user_email, user_password, CV_URL, CL_URL
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            first_name, last_name, gender, major, age,
+            email, hashed_pw, cv_path, cl_path
+        ))
+
+        mysql.connection.commit()
+        cur.close()
+
+        return jsonify({
+            'success': True,
+            'message': 'Registration successful!',
+            'redirect': '/login.html'
+        }), 201
+
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({
+            'success': False,
+            'message': 'Server error during registration.',
+            'error': str(e)
+        }), 500
+
+
+# GETTING AN ERRORRRRR -> ig i should do the dashboard before
+@app.route('/jobseeker-login', methods=['POST'])
+def jobseeker_login():
+    try:
+        # Change: Handle both JSON and form-data
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form
+
+        email = data.get('email', '').strip().lower()
+        password = data.get('password', '').strip()
+
+        # Validate inputs
+        if not email or not password:
+            return jsonify({
+                'success': False,
+                'message': 'Email and password are required'
+            }), 400
+
+        # Check email format
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            return jsonify({
+                'success': False,
+                'message': 'Invalid email format'
+            }), 400
+
+        # Database connection
+        cur = mysql.connection.cursor()
+
+        # Find user by email
+        cur.execute("""
+            SELECT user_id, first_name, last_name, user_email, user_password, 
+                   CV_URL, CL_URL, major, gender, age
+            FROM user 
+            WHERE user_email = %s
+        """, (email,))
+        
+        user = cur.fetchone()
+        cur.close()
+
+        # User not found
+        if not user:
+            return jsonify({
+                'success': False,
+                'message': 'Invalid email or password'
+            }), 401
+
+        # Verify password
+        if not bcrypt.checkpw(password.encode('utf-8'), user[4].encode('utf-8')):
+            return jsonify({
+                'success': False,
+                'message': 'Invalid email or password'
+            }), 401
+
+        # Prepare user data response
+        user_data = {
+            'user_id': user[0],
+            'first_name': user[1],
+            'last_name': user[2],
+            'email': user[3],
+            'cv_url': user[5],
+            'cl_url': user[6],
+            'major': user[7],
+            'gender': user[8],
+            'age': user[9],
+            'full_name': f"{user[1]} {user[2]}"
+        }
+
+        return jsonify({
+            'success': True,
+            'message': 'Login successful',
+            'user': user_data,
+            'redirect': 'jobseeker-dashboard.html'
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'Login error',
+            'error': str(e)
+        }), 500
+
+
+# IDKKKKKKKKKKKKKKK
+@app.route('/company-signup', methods=['POST'])
+def company_signup():
+    company_name = request.form.get('company_name')
+    company_email = request.form.get('company_email')
+    company_password = request.form.get('company_password')
+    
+    # Check if the required fields are filled
+    if not company_name or not company_email or not company_password:
+        return jsonify({'success': False, 'message': 'Missing required fields'})
+
+    # Hash the password
+    hashed_password = generate_password_hash(company_password)
+
+    # Database connection
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Insert into company table
+        cursor.execute('''
+            INSERT INTO company (company_name, type, company_size, description, company_logo_URL, company_email, company_password)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (company_name, request.form['type'], request.form['company_size'], request.form['description'], 
+              request.form.get('company_logo_URL', ''), company_email, hashed_password))
+        
+        # Commit changes to database
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({'success': True, 'message': 'Company successfully registered!'})
+    
+    except mysql.connector.Error as err:
+        # Log and return the error
+        print(f"Error: {err}")
+        return jsonify({'success': False, 'message': 'An error occurred while registering the company.'})
+
+    except Exception as e:
+        # Catch other exceptions
+        print(f"General error: {e}")
+        return jsonify({'success': False, 'message': 'An unexpected error occurred.'})
+
+# IDK IDK
+@app.route('/company-login', methods=['POST'])
+def company_login():
+    try:
+        # Get form data
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '').strip()
+
+        # Validate inputs
+        if not email or not password:
+            return jsonify({'success': False, 'message': 'Email and password are required'}), 400
+
+        cur = mysql.connection.cursor()
+
+        # Find company by email
+        cur.execute("""
+            SELECT company_id, company_name, company_email, company_password,
+                   company_logo_URL, type, company_size
+            FROM company 
+            WHERE company_email = %s
+        """, (email,))
+        
+        company = cur.fetchone()
+        cur.close()
+
+        # Company not found
+        if not company:
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+
+        # Verify password
+        if not bcrypt.checkpw(password.encode('utf-8'), company[3].encode('utf-8')):
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+
+        # Prepare response
+        company_data = {
+            'company_id': company[0],
+            'company_name': company[1],
+            'email': company[2],
+            'logo_url': company[4],
+            'industry': company[5],
+            'size': company[6]
+        }
+
+        return jsonify({
+            'success': True,
+            'message': 'Login successful',
+            'company': company_data,
+            'redirect': '/company-dashboard.html'
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'Server error during login',
+            'error': str(e)
+        }), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
