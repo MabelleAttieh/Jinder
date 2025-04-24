@@ -57,10 +57,10 @@ DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `company_id` int NOT NULL AUTO_INCREMENT,
   `company_name` varchar(100) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `company_size` int NOT NULL,
+  `industry` varchar(100) NOT NULL,
+  `company_size` varchar(100) NOT NULL,
   `description` varchar(200) NOT NULL,
-  `company_logo_URL` varchar(400) DEFAULT NULL,
+  `company_logo_url` varchar(400) DEFAULT NULL,
   `company_email` varchar(100) NOT NULL,
   `company_password` varchar(100) NOT NULL,
   PRIMARY KEY (`company_id`)
@@ -90,7 +90,7 @@ CREATE TABLE `job_opening` (
   `salary` decimal(10,2) NOT NULL,
   PRIMARY KEY (`job_id`),
   KEY `company_id` (`company_id`),
-  CONSTRAINT `job_opening_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`) ON DELETE CASCADE
+  CONSTRAINT `job_opening_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -117,12 +117,12 @@ CREATE TABLE `user` (
   `gender` varchar(20) NOT NULL,
   `major` varchar(50) NOT NULL,
   `age` int NOT NULL,
-  `user_email` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `user_password` varchar(100) NOT NULL,
   `CV_URL` varchar(400) NOT NULL,
   `CL_URL` varchar(400) NOT NULL,
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_email` (`user_email`),
+  UNIQUE KEY `email` (`email`),
   CONSTRAINT `user_chk_1` CHECK ((`gender` in (_utf8mb4'Male',_utf8mb4'Female')))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -145,4 +145,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-22 20:16:24
+-- Dump completed on 2025-04-24 20:11:45
