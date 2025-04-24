@@ -113,7 +113,6 @@ def signup():
             'error': str(e)
         }), 500
 
-
 # GETTING AN ERRORRRRR -> ig i should do the dashboard before
 @app.route('/jobseeker-login', methods=['POST'])
 def jobseeker_login():
@@ -197,107 +196,127 @@ def jobseeker_login():
             'error': str(e)
         }), 500
 
-
-# IDKKKKKKKKKKKKKKK
+# WORKSSSSSSS
 @app.route('/company-signup', methods=['POST'])
 def company_signup():
-    company_name = request.form.get('company_name')
-    company_email = request.form.get('company_email')
-    company_password = request.form.get('company_password')
-    
-    # Check if the required fields are filled
-    if not company_name or not company_email or not company_password:
-        return jsonify({'success': False, 'message': 'Missing required fields'})
-
-    # Hash the password
-    hashed_password = generate_password_hash(company_password)
-
-    # Database connection
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
     try:
-        # Insert into company table
-        cursor.execute('''
-            INSERT INTO company (company_name, type, company_size, description, company_logo_URL, company_email, company_password)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        ''', (company_name, request.form['type'], request.form['company_size'], request.form['description'], 
-              request.form.get('company_logo_URL', ''), company_email, hashed_password))
-        
-        # Commit changes to database
-        conn.commit()
-        cursor.close()
-        conn.close()
+        # Validate files (logo image)
+        if 'logo' not in request.files:
+            return jsonify({'success': False, 'message': 'Company logo is required.'}), 400
 
-        return jsonify({'success': True, 'message': 'Company successfully registered!'})
-    
-    except mysql.connector.Error as err:
-        # Log and return the error
-        print(f"Error: {err}")
-        return jsonify({'success': False, 'message': 'An error occurred while registering the company.'})
+        logo_file = request.files['logo']
+
+        if logo_file.filename == '':
+            return jsonify({'success': False, 'message': 'No selected file.'}), 400
+
+        # Secure filename and save
+        logo_filename = secure_filename(f"logo_{request.form.get('company_email')}_{logo_file.filename}")
+        logo_path = os.path.join(app.config['UPLOAD_FOLDER'], logo_filename)
+        logo_file.save(logo_path)
+
+        # Get form data
+        company_name = request.form.get('company-name', '').strip()
+        industry = request.form.get('industry', '').strip()
+        company_size = request.form.get('company-size', '').strip()
+        description = request.form.get('description', '').strip()
+        company_email = request.form.get('email', '').strip().lower()
+        company_password = request.form.get('password', '')
+
+        # Validate required fields
+        if not all([company_name, industry, company_size, description, company_email, company_password]):
+            return jsonify({'success': False, 'message': 'Missing fields.'}), 400
+
+        # Hash password
+        hashed_pw = bcrypt.hashpw(company_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        cur = mysql.connection.cursor()
+
+        # Check email uniqueness
+        cur.execute("SELECT company_id FROM company WHERE company_email = %s", (company_email,))
+        if cur.fetchone():
+            cur.close()
+            return jsonify({'success': False, 'message': 'Email already exists.'}), 409
+
+        # Insert company data
+        cur.execute("""
+            INSERT INTO company (
+                company_name, industry, company_size, description, 
+                company_logo_URL, company_email, company_password
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (
+            company_name, industry, company_size, description, 
+            logo_path, company_email, hashed_pw
+        ))
+
+        mysql.connection.commit()
+        cur.close()
+
+        return jsonify({
+            'success': True,
+            'message': 'Company registration successful!',
+            'redirect': '/company-login.html'
+        }), 201
 
     except Exception as e:
-        # Catch other exceptions
-        print(f"General error: {e}")
-        return jsonify({'success': False, 'message': 'An unexpected error occurred.'})
+        mysql.connection.rollback()
+        return jsonify({
+            'success': False,
+            'message': 'Server error during registration.',
+            'error': str(e)
+        }), 500
 
-# IDK IDK
+# DID NOT WORK YET
 @app.route('/company-login', methods=['POST'])
 def company_login():
     try:
         # Get form data
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '').strip()
+        data = request.get_json()
+        company_email = data.get('email', '').strip().lower()
+        company_password = data.get('password', '').strip()
 
-        # Validate inputs
-        if not email or not password:
-            return jsonify({'success': False, 'message': 'Email and password are required'}), 400
+        # Validate required fields
+        if not all([company_email, company_password]):
+            return jsonify({'success': False, 'message': 'Please fill in all fields.'}), 400
 
         cur = mysql.connection.cursor()
 
-        # Find company by email
-        cur.execute("""
-            SELECT company_id, company_name, company_email, company_password,
-                   company_logo_URL, type, company_size
-            FROM company 
-            WHERE company_email = %s
-        """, (email,))
-        
+        # Check if the company exists in the database
+        cur.execute("SELECT company_id, company_name, company_password FROM company WHERE company_email = %s", (company_email,))
         company = cur.fetchone()
-        cur.close()
 
-        # Company not found
         if not company:
-            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+            cur.close()
+            return jsonify({'success': False, 'message': 'Invalid email or password.'}), 401
 
         # Verify password
-        if not bcrypt.checkpw(password.encode('utf-8'), company[3].encode('utf-8')):
-            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+        stored_password = company[2]
+        if not bcrypt.checkpw(company_password.encode('utf-8'), stored_password.encode('utf-8')):
+            cur.close()
+            return jsonify({'success': False, 'message': 'Invalid email or password.'}), 401
 
-        # Prepare response
+        # If login is successful, return company data and redirect URL
         company_data = {
             'company_id': company[0],
             'company_name': company[1],
-            'email': company[2],
-            'logo_url': company[4],
-            'industry': company[5],
-            'size': company[6]
+            'company_email': company_email,
         }
+
+        cur.close()
 
         return jsonify({
             'success': True,
-            'message': 'Login successful',
+            'message': 'Login successful!',
             'company': company_data,
             'redirect': '/company-dashboard.html'
-        })
+        }), 200
 
     except Exception as e:
         return jsonify({
             'success': False,
-            'message': 'Server error during login',
+            'message': 'Server error during login.',
             'error': str(e)
         }), 500
 
+
 if __name__ == '__main__':
     app.run(debug=True)
-
