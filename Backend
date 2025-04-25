@@ -7,7 +7,6 @@ def get_connection():
         password="MYSQLmabelle05!",
         database="jinder"
     )
-
 from flask import Flask, request, jsonify, session, url_for
 from flask_mysqldb import MySQL
 from flask_cors import CORS
@@ -169,9 +168,6 @@ def jobseeker_login():
                 'message': 'Invalid email or password'
             }), 401
 
-        #set session
-        session['user_id'] = user[0] 
-
         # Prepare user data response
         user_data = {
             'user_id': user[0],
@@ -199,6 +195,12 @@ def jobseeker_login():
             'message': 'Login error',
             'error': str(e)
         }), 500
+        session['company_id'] = company_id  # Set the company ID in the session
+        return jsonify({
+            'success': True,
+            'message': 'Login successful!',
+            'redirect': '/dashboard'
+        }), 200
 
 # WORKSSSSSSS
 @app.route('/company-signup', methods=['POST'])
@@ -293,6 +295,16 @@ def company_login():
             cur.close()
             return jsonify({'success': False, 'message': 'Invalid email or password.'}), 401
 
+        # Set session
+        session['company_id'] = company[0]
+
+        company_data = {
+            'company_id': company[0],
+            'company_name': company[1],
+            'company_email': company_email,
+        }
+
+
         company_data = {
             'company_id': company[0],
             'company_name': company[1],
@@ -314,7 +326,6 @@ def company_login():
             'message': 'Server error during login.',
             'error': str(e)
         }), 500
-
 
 
 @app.route('/jobseeker-profile', methods=['GET'])
@@ -349,6 +360,42 @@ def get_jobseeker_profile():
         app.logger.exception("Error in jobseeker-profile")
         return jsonify({'error': str(err)}), 500
 
+
+#  WORKSSSSSSSSSS
+@app.route('/job-post', methods=['POST'])
+def job_post():
+    try:
+        data = request.get_json()
+
+        # Extract data
+        job_title = data.get('title', '').strip()
+        job_description = data.get('description', '').strip()
+        salary = data.get('salary', '').strip()
+        company_name = data.get('company', '').strip()
+
+        # Basic validation
+        if not all([job_title, job_description, salary, company_name]):
+            return jsonify({'success': False, 'message': 'All fields are required.'}), 400
+
+        # Insert into database
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO new_job (job_title, job_description, salary, company_name)
+            VALUES (%s, %s, %s, %s)
+        """, (job_title, job_description, salary, company_name))
+
+        mysql.connection.commit()
+        cur.close()
+
+        return jsonify({'success': True, 'message': 'Job posted successfully!'}), 201
+
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({
+            'success': False,
+            'message': 'Server error while posting job.',
+            'error': str(e)
+        }), 500
 
 
 if __name__ == '__main__':
