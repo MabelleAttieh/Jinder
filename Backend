@@ -8,7 +8,7 @@ def get_connection():
         database="jinder"
     )
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session, url_for
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from functools import wraps
@@ -25,6 +25,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'MYSQLmabelle05!'
 app.config['MYSQL_DB'] = 'jinder'
+app.secret_key = 'ourlonglongkey'
 mysql = MySQL(app)
 
 # Upload Configuration
@@ -168,6 +169,9 @@ def jobseeker_login():
                 'message': 'Invalid email or password'
             }), 401
 
+        #set session
+        session['user_id'] = user[0] 
+
         # Prepare user data response
         user_data = {
             'user_id': user[0],
@@ -265,22 +269,18 @@ def company_signup():
             'error': str(e)
         }), 500
 
-# DID NOT WORK YET
+
 @app.route('/company-login', methods=['POST'])
 def company_login():
     try:
-        # Get form data
         data = request.get_json()
         company_email = data.get('email', '').strip().lower()
         company_password = data.get('password', '').strip()
 
-        # Validate required fields
-        if not all([company_email, company_password]):
+        if not company_email or not company_password:
             return jsonify({'success': False, 'message': 'Please fill in all fields.'}), 400
 
         cur = mysql.connection.cursor()
-
-        # Check if the company exists in the database
         cur.execute("SELECT company_id, company_name, company_password FROM company WHERE company_email = %s", (company_email,))
         company = cur.fetchone()
 
@@ -288,13 +288,11 @@ def company_login():
             cur.close()
             return jsonify({'success': False, 'message': 'Invalid email or password.'}), 401
 
-        # Verify password
         stored_password = company[2]
         if not bcrypt.checkpw(company_password.encode('utf-8'), stored_password.encode('utf-8')):
             cur.close()
             return jsonify({'success': False, 'message': 'Invalid email or password.'}), 401
 
-        # If login is successful, return company data and redirect URL
         company_data = {
             'company_id': company[0],
             'company_name': company[1],
@@ -307,7 +305,7 @@ def company_login():
             'success': True,
             'message': 'Login successful!',
             'company': company_data,
-            'redirect': '/company-dashboard.html'
+            'redirect': 'company-dashboard.html'
         }), 200
 
     except Exception as e:
@@ -316,6 +314,41 @@ def company_login():
             'message': 'Server error during login.',
             'error': str(e)
         }), 500
+
+
+
+@app.route('/jobseeker-profile', methods=['GET'])
+def get_jobseeker_profile():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    try:
+        # Use flask_mysqldb instead of mysql.connector
+        cur = mysql.connection.cursor(dictionary=True)
+        cur.execute("""
+            SELECT 
+               CONCAT(first_name, ' ', last_name) AS name,
+               major AS profession,
+               user_email     AS email,
+               CV_URL         AS cvUrl,
+               CL_URL         AS coverLetterUrl
+            FROM user
+            WHERE user_id = %s
+        """, (user_id,))
+        user = cur.fetchone()
+        cur.close()
+
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        return jsonify(user)
+
+    except Exception as err:
+        # Log the real error so we can debug next time
+        app.logger.exception("Error in jobseeker-profile")
+        return jsonify({'error': str(err)}), 500
+
 
 
 if __name__ == '__main__':
